@@ -3,19 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Convert Input to CSV Formats</title>
+    <title>Convert Input to CSV/Space Formats</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h2>Convert column to CSV</h2>
-        <textarea id="userInput" placeholder="Paste here..."></textarea>
+        <h2>Convert column to CSV/Space Separated</h2>
+        <textarea id="userInput" placeholder="Paste column data here (one item per line)..."></textarea>
 
         <div class="controls">
-            <button onclick="convertData()" id="generateButton">Generate CSVs</button>
+            <button onclick="convertData()" id="generateButton">Generate Outputs</button>
             <button onclick="clearInput()" id="clearButton">Clear Input</button>
         </div>
 
+        <!-- Space Separated Output Section -->
+        <div class="output-container">
+            <div class="output-header">
+                <h3>Space Separated Values</h3>
+                <button onclick="copyOutput('spaceSeparatedOutput')" class="copy-btn">Copy</button>
+            </div>
+            <div id="spaceSeparatedOutput" class="output-box"></div>
+        </div>
+
+        <!-- Single Quoted CSV Output Section -->
         <div class="output-container">
             <div class="output-header">
                 <h3>Single Quoted CSV Output</h3>
@@ -24,6 +34,7 @@
             <div id="singleQuotedCsvOutput" class="output-box"></div>
         </div>
 
+        <!-- Standard Comma Separated Values Output Section -->
         <div class="output-container">
             <div class="output-header">
                 <h3>Standard Comma Separated Values Output</h3>
@@ -33,6 +44,6 @@
         </div>
     </div>
 
-    <script src="updated_csv.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
