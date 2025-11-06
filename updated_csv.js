@@ -1,5 +1,3 @@
-// Externalized JavaScript from updated_csv.html
-
 function convertData() {
     const inputArea = document.getElementById('userInput');
     // Split by newline, filter out empty lines, handle potential Windows \r
@@ -7,6 +5,7 @@ function convertData() {
     
     let singleQuotedCsvData = [];
     let simpleCsvData = []; 
+    // We only need the 'lines' array for space separated values
 
     for (const data of lines) {
         // 1. Single quoted CSV format: escape single quotes with double single quotes and wrap in single quotes
@@ -16,7 +15,8 @@ function convertData() {
         // 2. Standard CSV (RFC 4180 style): wrap in double quotes if it contains commas, newlines, or double quotes. Escape double quotes with another double quote.
         let simpleCsvValue = data;
         // Check if quoting is necessary for standard CSV compliance
-        if (data.includes(',') || data.includes('"') || data.includes('\n') || data.includes('\r')) {
+        if (data.includes(',') || data.includes('"') || data.includes('\n') || data.includes('\r') || data.includes(' ')) {
+            // We also include space check here to be safe for standard CSV if the original column input had spaces
             // Escape double quotes by doubling them
             simpleCsvValue = '"' + data.replace(/"/g, '""') + '"';
         }
@@ -26,6 +26,9 @@ function convertData() {
     // Join items with a comma (no space) on a single line
     document.getElementById('singleQuotedCsvOutput').textContent = singleQuotedCsvData.join(',');
     document.getElementById('commaSeparatedOutput').textContent = simpleCsvData.join(',');
+    
+    // NEW: Join items with a single space on a single line
+    document.getElementById('spaceSeparatedOutput').textContent = lines.join(' ');
 }
 
 function clearInput() {
@@ -33,6 +36,7 @@ function clearInput() {
     document.getElementById('userInput').value = '';
     document.getElementById('singleQuotedCsvOutput').textContent = '';
     document.getElementById('commaSeparatedOutput').textContent = '';
+    document.getElementById('spaceSeparatedOutput').textContent = ''; // Clear new output box
 }
 
 function copyOutput(elementId) {
@@ -46,9 +50,14 @@ function copyOutput(elementId) {
 
     // Use the modern Clipboard API
     navigator.clipboard.writeText(textToCopy).then(() => {
-        alert(`Copied ${elementId.includes('single') ? 'Single Quoted CSV' : 'Standard CSV'} output to clipboard!`);
+        let formatName = 'Output';
+        if (elementId.includes('singleQuoted')) formatName = 'Single Quoted CSV';
+        else if (elementId.includes('commaSeparated')) formatName = 'Standard CSV';
+        else if (elementId.includes('spaceSeparated')) formatName = 'Space Separated';
+
+        alert(`Copied ${formatName} output to clipboard!`);
     }).catch(err => {
         console.error('Could not copy text: ', err);
-        alert('Failed to copy text. Please select the text manually and copy.');
+        alert('Failed to copy text.');
     });
 }
